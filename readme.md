@@ -204,3 +204,93 @@ Things to note on this step:
 
 ### So far:
 ![Captura de pantalla 2024-01-25 192230](https://github.com/TonySapa/your-first-non-angular-app/assets/49716479/4ee1d4a5-252f-4227-b12a-9fb4a7b24440)
+
+## 3 - Create and use `housing-location` component
+```
+// src/app/housing-location.component.ts in Angular
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-housing-location',
+  standalone: true,
+  imports: [],
+  template: `
+    <p>
+      housing-location works!
+    </p>
+  `,
+  styleUrl: './housing-location.component.css'
+})
+export class HousingLocationComponent {
+
+}
+```
+```
+// src/components/HousingLocation.tsx in React
+const HousingLocation = () => {
+  return (
+    <p>HousingLocation works!</p>
+  )
+}
+
+export default HousingLocation
+```
+Nothing new to add about Angular/React that hasn't been said on previous step.
+Next, the update of Home component:
+
+```
+// src/app/home.component.ts in Angular
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { HousingLocationComponent } from '../housing-location/housing-location.component';
+@Component({
+  selector: 'app-home',
+  standalone: true,
+  imports: [
+    CommonModule,
+    HousingLocationComponent
+  ],
+  template: `
+    <section>
+      <form>
+        <input type="text" placeholder="Filter by city">
+        <button class="primary" type="button">Search</button>
+      </form>
+    </section>
+    <section class="results">
+      <app-housing-location></app-housing-location>
+    </section>
+    `,
+  styleUrls: ['./home.component.css'],
+})
+
+export class HomeComponent {
+
+}
+```
+```
+// src/components/Home.tsx in React
+import './Home.css'
+import HousingLocation from './HousingLocation'
+
+const Home = () => {
+  return (
+    <>
+      <section>
+        <form>
+          <input type="text" placeholder="Filter by city" />
+          <button className="primary" type="button">Search</button>
+        </form>
+      </section>
+      <section className="results">
+        <HousingLocation />
+      </section>
+    </>
+  )
+}
+
+export default Home
+```
+New things to note on this step:
+- Since JSX require a parent element I wrapped both section elements making use of [React Fragments]('https://react.dev/reference/react/Fragment')
+- The component is imported on top and wrote as a self-closed tag using JSX syntax.
