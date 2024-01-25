@@ -181,10 +181,26 @@ export class HomeComponent {
 ```
 ```
 // In React as a functional component
+import './Home.css'
 
+const Home = () => {
+  return (
+    <section>
+      <form>
+        <input type="text" placeholder="Filter by city" />
+        <button className="primary" type="button">Search</button>
+      </form>
+    </section>
+  )
+}
+
+export default Home
 ```
 Things to note on this step:
 - As always, React doesn't need to import the core functionality for components.
 - With Angular you will update `template` field of the component class, in React you will just edit what response you want the component to give you, using JSX syntax.
 - Notice `input` element, JSX baby, closed tags.
 - In Angular, we import the styles by updating `styleUrls` field of the component class. In React we import the stylesheet on top as `import './Home.css'`
+
+### So far:
+![Captura de pantalla 2024-01-25 192230](https://github.com/TonySapa/your-first-non-angular-app/assets/49716479/4ee1d4a5-252f-4227-b12a-9fb4a7b24440)
