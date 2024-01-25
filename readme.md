@@ -294,3 +294,69 @@ export default Home
 New things to note on this step:
 - Since JSX require a parent element I wrapped both section elements making use of [React Fragments]('https://react.dev/reference/react/Fragment')
 - The component is imported on top and wrote as a self-closed tag using JSX syntax.
+
+## 4 - Create a new interface
+No fancy scripts to generate new type definitions using react.
+```
+// src/app/housinglocation.ts on Angular
+export interface HousingLocation {
+  id: number;
+  name: string;
+  city: string;
+  state: string;
+  photo: string;
+  availableUnits: number;
+  wifi: boolean;
+  laundry: boolean;
+}
+```
+```
+// src/types/index.ts on React
+... same as with Angular
+```
+In practice, local type definitions are sometimes found on component folders on many React projects, but when starting a new project, like in this case, we will declare it on index file of types.
+
+### Creating a mock house
+Ok here's where the fun starts. In Angular we would declare the class and specify the data the component receives as input.
+```
+export class HomeComponent {
+  readonly baseUrl = 'https://angular.io/assets/images/tutorials/faa';
+
+  housingLocation: HousingLocation = {
+    id: 9999,
+    name: 'Test Home',
+    city: 'Test city',
+    state: 'ST',
+    photo: `${this.baseUrl}/example-house.jpg`,
+    availableUnits: 99,
+    wifi: true,
+    laundry: false,
+  };
+}
+```
+In React, using functional components, we declare that as we would do with any parameters of any given function. Those params are named [props]('https://react.dev/learn/passing-props-to-a-component') by convention, and there are several different ways to do that, a matter of convenience:
+```
+import { HousingLocation as HousingLocationProps } from '../types'
+...
+const HousingLocation = (props: HousingLocationProps) => {
+  ...
+}
+```
+You can later request those `props` or `function arguments values` as `props.city` or just deconstruct them when declaring them. This way you have better visibility but linters will ruin your life if you are not using **ALL** of them in this file after declaring them.
+```
+import { HousingLocation as HousingLocationProps } from '../types'
+...
+const HousingLocation = ({
+  id,
+  name,
+  city
+  ...
+}: HousingLocationProps) => {
+  ...
+}
+```
+This way you could access them just like `city`.
+
+By the way, I named the interface as `HousingLocationProps` instead of `HousingLocation` since component and interface were named the same in Angular, and here, we can not re-declare same variable.
+
+At this stage, Angular app renders but React app will crash. That's because `src/components/Home.tsx` is rendering `src/components/HousingLocation.tsx` and expected props are not passed yet. We can also make those props optional but there's no point to do so here.
