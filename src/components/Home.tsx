@@ -1,5 +1,19 @@
 import './Home.css'
 import HousingLocation from './HousingLocation'
+import { HousingLocation as HousingLocationProps } from '../types';
+
+const baseUrl = 'https://angular.io/assets/images/tutorials/faa'
+
+const hardcodedHousingLocationProps: HousingLocationProps = {
+  id: 9999,
+  name: 'Test Home',
+  city: 'Test city',
+  state: 'ST',
+  photo: `${baseUrl}/example-house.jpg`,
+  availableUnits: 99,
+  wifi: true,
+  laundry: false,
+};
 
 const Home = () => {
   return (
@@ -11,7 +25,7 @@ const Home = () => {
         </form>
       </section>
       <section className="results">
-        <HousingLocation />
+        <HousingLocation {...hardcodedHousingLocationProps} />
       </section>
     </>
   )

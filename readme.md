@@ -360,3 +360,137 @@ This way you could access them just like `city`.
 By the way, I named the interface as `HousingLocationProps` instead of `HousingLocation` since component and interface were named the same in Angular, and here, we can not re-declare same variable.
 
 At this stage, Angular app renders but React app will crash. That's because `src/components/Home.tsx` is rendering `src/components/HousingLocation.tsx` and expected props are not passed yet. We can also make those props optional but there's no point to do so here.
+
+## 5, 6 and 7 - Adding input parameter to the component, Adding a property binding to a component’s template and adding dynamic values to templates.
+```
+// src/app/housing-location.component.ts in Angular
+import { Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { HousingLocation } from '../housinglocation';
+
+@Component({
+  selector: 'app-housing-location',
+  standalone: true,
+  imports: [],
+  template: `
+  <section class="listing">
+    <img class="listing-photo" [src]="housingLocation.photo" alt="Exterior photo of {{housingLocation.name}}">
+    <h2 class="listing-heading">{{ housingLocation.name }}</h2>
+    <p class="listing-location">{{ housingLocation.city}}, {{housingLocation.state }}</p>
+  </section>
+  `,
+  styleUrl: './housing-location.component.css'
+})
+export class HousingLocationComponent {
+  @Input() housingLocation!: HousingLocation;
+}
+```
+
+```
+// src/components/HousingLocation.tsx in React
+import './HousingLocation.css'
+import { HousingLocation as HousingLocationProps } from '../types'
+
+const HousingLocation = (props: HousingLocationProps) => {
+  return (
+    <section className="listing">
+      <img className="listing-photo" src={props.photo} alt={`Exterior of ${props.name}`} />
+      <h2 className="listing-heading">{props.name}</h2>
+      <p className="listing-location">{`${props.city}, ${props.state}`}</p>
+    </section>
+  )
+}
+
+export default HousingLocation
+```
+New things to note:
+- We access properties which in this case are function parameters as explained on previous point. The syntax here requires a pair of curled brackets only.
+- On official angular tutorial the `alt` attribute was redundant and didn't followed best practices. Screen-readers already announce `img` tags as image, therefore is redundant to use words such as "picture", "photo" or "image" when naming them.
+```
+// Angular
+<img class="listing-photo" [src]="housingLocation.photo" alt="Exterior photo of {{housingLocation.name}}">
+```
+```
+// React
+<img className="listing-photo" src={props.photo} alt={`Exterior of ${props.name}`} />
+```
+```
+// src/app/home/home-component.ts in Angular
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { HousingLocationComponent } from '../housing-location/housing-location.component';
+import { HousingLocation } from '../housinglocation';
+
+@Component({
+  selector: 'app-home',
+  standalone: true,
+  imports: [
+    CommonModule,
+    HousingLocationComponent
+  ],
+  template: `
+    <section>
+      <form>
+        <input type="text" placeholder="Filter by city">
+        <button class="primary" type="button">Search</button>
+      </form>
+    </section>
+    <section class="results">
+      <app-housing-location [housingLocation]="housingLocation"></app-housing-location>
+    </section>
+    `,
+  styleUrls: ['./home.component.css'],
+})
+
+export class HomeComponent {
+  readonly baseUrl = 'https://angular.io/assets/images/tutorials/faa';
+
+  housingLocation: HousingLocation = {
+    id: 9999,
+    name: 'Test Home',
+    city: 'Test city',
+    state: 'ST',
+    photo: `${this.baseUrl}/example-house.jpg`,
+    availableUnits: 99,
+    wifi: true,
+    laundry: false,
+  };
+}
+```
+```
+// src/components/Home.tsx in React
+import './Home.css'
+import HousingLocation from './HousingLocation'
+import { HousingLocation as HousingLocationProps } from '../types';
+
+const baseUrl = 'https://angular.io/assets/images/tutorials/faa'
+
+const hardcodedHousingLocationProps: HousingLocationProps = {
+  id: 9999,
+  name: 'Test Home',
+  city: 'Test city',
+  state: 'ST',
+  photo: `${baseUrl}/example-house.jpg`,
+  availableUnits: 99,
+  wifi: true,
+  laundry: false,
+};
+
+const Home = () => {
+  return (
+    <>
+      <section>
+        <form>
+          <input type="text" placeholder="Filter by city" />
+          <button className="primary" type="button">Search</button>
+        </form>
+      </section>
+      <section className="results">
+        <HousingLocation {...hardcodedHousingLocationProps} />
+      </section>
+    </>
+  )
+}
+
+export default Home
+```
