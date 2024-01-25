@@ -494,3 +494,74 @@ const Home = () => {
 
 export default Home
 ```
+
+## 8 - Use *ngFor to list objects in component
+```
+// src/app/home/home.component.ts in Angular
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { HousingLocationComponent } from '../housing-location/housing-location.component';
+import { HousingLocation } from '../housinglocation';
+
+@Component({
+  selector: 'app-home',
+  standalone: true,
+  imports: [
+    CommonModule,
+    HousingLocationComponent
+  ],
+  template: `
+    <section>
+      <form>
+        <input type="text" placeholder="Filter by city">
+        <button class="primary" type="button">Search</button>
+      </form>
+    </section>
+    <section class="results">
+      <app-housing-location
+        *ngFor="let housingLocation of housingLocationList"
+        [housingLocation]="housingLocation">
+      </app-housing-location>
+    </section>
+    `,
+  styleUrls: ['./home.component.css'],
+})
+
+export class HomeComponent {
+  readonly baseUrl = 'https://angular.io/assets/images/tutorials/faa';
+
+  housingLocationList: HousingLocation[] = [// hardcoded array]
+}
+```
+```
+// src/components/Home.tsx in React
+import './Home.css'
+import HousingLocation from './HousingLocation'
+import { HousingLocation as HousingLocationProps } from '../types';
+
+const baseUrl = 'https://angular.io/assets/images/tutorials/faa'
+
+const mockLocations = [// hardcoded array]
+
+const Home = () => {
+  return (
+    <>
+      <section>
+        <form>
+          <input type="text" placeholder="Filter by city" />
+          <button className="primary" type="button">Search</button>
+        </form>
+      </section>
+      <section className="results">
+        {mockLocations.map((location: HousingLocationProps) => (
+          <HousingLocation {...location} />
+        ))}
+      </section>
+    </>
+  )
+}
+
+export default Home
+```
+New things to note:
+- *ngFor is cool, javascript array methods are better.
