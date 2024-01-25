@@ -814,3 +814,143 @@ const housingService = {
 
 export default housingService
 ```
+
+## 10 Add routing
+Here I'll use most populart React library for routes: react-router. Although React was made to build SPA and most of the work I've seen requiring dynamic routes where also SSR projects built with NextJS, React-router still very common for CSR projects.
+
+```
+// src/main.ts in Angular
+/*
+*  Protractor support is deprecated in Angular.
+*  Protractor is used in this example for compatibility with Angular documentation tools.
+*/
+import { bootstrapApplication,provideProtractorTestingSupport } from '@angular/platform-browser';
+import { AppComponent } from './app/app.component';
+import { provideRouter } from '@angular/router';
+import routeConfig from './app/routes';
+
+bootstrapApplication(AppComponent,
+  {
+    providers: [
+      provideProtractorTestingSupport(),
+      provideRouter(routeConfig)
+    ]
+  }
+).catch(err => console.error(err));
+```
+```
+// src/app/routes.ts in Angular
+import { Routes } from '@angular/router';
+import { HomeComponent } from './home/home.component';
+import { DetailsComponent } from './details/details.component';
+
+const routeConfig: Routes = [
+  {
+    path: '',
+    component: HomeComponent,
+    title: 'Home page'
+  },
+  {
+    path: 'details/:id',
+    component: DetailsComponent,
+    title: 'Home details'
+  }
+];
+
+export default routeConfig;
+```
+```
+// src/app/app.component.ts in Angular
+import { Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { HomeComponent } from './home/home.component';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [
+    HomeComponent,
+    RouterModule,
+  ],
+  template: `
+  <main>
+    <a [routerLink]="['/']">
+      <header class="brand-name">
+        <img class="brand-logo" src="/assets/logo.svg" alt="logo" aria-hidden="true">
+      </header>
+    </a>
+    <section class="content">
+      <router-outlet></router-outlet>
+    </section>
+  </main>
+`,
+  styleUrls: ['./app.component.css'],
+})
+export class AppComponent {
+  title = 'homes';
+}
+```
+```
+// src/app/details/details.component.ts in Angular
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-details',
+  standalone: true,
+  imports: [],
+  template: `
+    <p>
+      details works!
+    </p>
+  `,
+  styleUrl: './details.component.css'
+})
+export class DetailsComponent {
+
+}
+```
+In contrast in React:
+```
+// src/index.tsx in React
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import './index.css'
+import reportWebVitals from './reportWebVitals'
+import AppRoot from './App'
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from 'react-router-dom'
+import Details from './components/Details'
+
+const root = ReactDOM.createRoot(
+  document.getElementById('root') as HTMLElement
+)
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <AppRoot />,
+  },
+  {
+    path: "details/:id",
+    element: <Details />
+  }
+])
+
+root.render(
+  <React.StrictMode>
+    <RouterProvider router={router} />
+  </React.StrictMode>
+)
+```
+```
+// src/components/Details.tsx in React
+const Details = () => {
+  return (
+    <p>Details works!</p>
+  )
+}
+
+export default Details
+```
